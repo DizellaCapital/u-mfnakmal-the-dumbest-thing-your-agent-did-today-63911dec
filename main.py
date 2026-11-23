@@ -15,6 +15,10 @@ def checked_entry():
     text = ENTRY.strip()
     if not text:
         sys.exit("entry line is empty")
+    # One line means one line: no newline, carriage return, or other
+    # control character may hide inside the text.
+    if any(ord(ch) < 0x20 and ch != "\t" for ch in text):
+        sys.exit("entry line must not contain control characters")
     raw = text.encode("utf-8")
     if len(raw) < 1 or len(raw) > 200:
         sys.exit("entry must be 1-200 bytes, got %d" % len(raw))
